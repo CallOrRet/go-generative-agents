@@ -1,19 +1,21 @@
 VERSION=$(shell git describe --tags)
 
 build:
-	go build -ldflags "-s -w -X main.Version=$(VERSION)" cmd/main.go
+	go build -ldflags "-s -w -X main.Version=$(VERSION)" -o cmd/agents cmd/main.go
 
-install:
-	go install -ldflags "-s -w -X main.Version=$(VERSION)" cmd/main.go
 
 release:
-	CGO_ENABLED=0 gox --arch 'amd64 arm64' --os 'windows linux darwin' --output "dist/agents_{{.OS}}_{{.Arch}}/{{.Dir}}" -ldflags "-s -w -X main.Version=$(VERSION)" cmd/main.go
-	zip      release/agents_windows_amd64.zip   dist/agents_windows_amd64/agents.exe -j
-	tar zcvf release/agents_linux_amd64.tar.gz  -C dist/agents_linux_amd64/agents
-	tar zcvf release/agents_linux_arm64.tar.gz  -C dist/agents_linux_arm64/agents
-	tar zcvf release/agents_darwin_amd64.tar.gz -C dist/agents_darwin_amd64/agents
-	tar zcvf release/agents_darwin_arm64.tar.gz -C dist/agents_darwin_arm64/agents
+	cd ./cmd && CGO_ENABLED=0 gox --arch 'amd64 arm64 386' --os 'linux' --output "../dist/agents_{{.OS}}_{{.Arch}}/agents" -ldflags "-s -w -X main.Version=$(VERSION)"
+	cd ./cmd && CGO_ENABLED=0 gox --arch 'amd64 arm64' --os 'darwin' --output "../dist/agents_{{.OS}}_{{.Arch}}/agents" -ldflags "-s -w -X main.Version=$(VERSION)"
+	cd ./cmd && CGO_ENABLED=0 gox --arch 'amd64 386' --os 'windows' --output "../dist/agents_{{.OS}}_{{.Arch}}/agents" -ldflags "-s -w -X main.Version=$(VERSION)"
+	tar zcvf package/agents_windows_amd64.tar.gz   -C dist/agents_windows_amd64/ agents.exe
+	tar zcvf package/agents_windows_386.tar.gz   -C dist/agents_windows_386/ agents.exe
+	tar zcvf package/agents_linux_amd64.tar.gz  -C dist/agents_linux_amd64/ agents
+	tar zcvf package/agents_linux_arm64.tar.gz  -C dist/agents_linux_arm64/ agents
+	tar zcvf package/agents_linux_386.tar.gz  -C dist/agents_linux_386/ agents
+	tar zcvf package/agents_darwin_amd64.tar.gz -C dist/agents_darwin_amd64/ agents
+	tar zcvf package/agents_darwin_arm64.tar.gz -C dist/agents_darwin_arm64/ agents
 
 clean:
 	rm -rf dist/
-	rm -rf release/
+	rm -rf package/*
