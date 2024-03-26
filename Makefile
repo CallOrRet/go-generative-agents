@@ -6,9 +6,9 @@ REVISION=$(shell git rev-parse --short HEAD 2>/dev/null || echo "")
 BIN=agents
 SRC=./cmd
 
-GO_FLAGS=-ldflags "-s -w -X main.Version=$(VERSION) -X main.Revision=$(REVISION)"
-GO_ENV=CGO_ENABLED=0
 GO=$(shell which go)
+GO_ENV=CGO_ENABLED=0
+GO_FLAGS=-ldflags "-s -w -X main.Version=$(VERSION) -X main.Revision=$(REVISION)"
 
 build: generate
 	@$(GO) build $(GO_FLAGS) -o $(SRC)/$(BIN) $(SRC)
