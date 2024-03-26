@@ -30,6 +30,8 @@ generate:
 	@$(GO) mod tidy
 
 clean:
+	@$(GO) clean ./...
+	@rm -rf $(BIN)
 	@rm -rf dist/
 	@rm -rf package/*
 
