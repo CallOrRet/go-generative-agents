@@ -11,8 +11,7 @@ GO_ENV=CGO_ENABLED=0
 GO_FLAGS=-ldflags "-s -w -X main.Version=$(VERSION) -X main.Revision=$(REVISION)"
 
 build: generate
-	@$(GO) build $(GO_FLAGS) -o $(SRC)/$(BIN) $(SRC)
-
+	@$(GO) build $(GO_FLAGS) -o $(BIN) $(SRC)
 
 release: generate
 	@cd $(SRC) && $(GO_ENV) gox --arch 'amd64 arm64 386' --os 'linux' --output "../dist/$(BIN)_{{.OS}}_{{.Arch}}/$(BIN)" $(GO_FLAGS)
