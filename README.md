@@ -8,5 +8,5 @@ make build
 
 ```
 make release
-# The compressed files will be located within the "package" directory.
 ```
+The compressed files will be located within the "package" directory.
